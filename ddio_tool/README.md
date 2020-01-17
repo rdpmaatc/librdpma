@@ -12,5 +12,8 @@ The code do detect, disable and enable DDIO on Xeon processors.
 2. make
 `cmake .; make;`
 
+## To run:
+`./setup_dca --help`
+
 ## Credicts: 
 - libpci (https://github.com/pciutils/pciutils)
