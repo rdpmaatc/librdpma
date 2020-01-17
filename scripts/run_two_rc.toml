@@ -1,0 +1,22 @@
+[[sync]]
+source = "wxd@val19:~/projects/rocc_nvm/scripts/nvm_rrtclient"
+targets = ["wxd@val19:~"]
+
+[[sync]]
+source = "wxd@r740:~/projects/rocc_nvm/scripts/nvm_rrtserver"
+targets = ["wxd@r740:~"]
+
+## RPC's perf
+[[pass]]
+host = "r740"
+path = '~/projects/rocc_nvm/scripts/'
+cmd  = 'export MLX5_SINGLE_THREADED=1; sudo ./nvm_rrtserver --port=6666 -use_nvm=true --threads=10 --nvm_sz=10 --clflush=true --nvm_file=/dev/dax1.3'
+
+[[pass]]                                                                                                  
+host = "val19"
+path = '~/projects/rocc_nvm/scripts/'
+cmd  = 'export MLX5_SINGLE_THREADED=1; ./nvm_rrtclient -addr="r740:6666" --threads=10 --coros=1 --id=1 --use_nic_idx=1 --payload=64 -use_read=false --window_sz=1 -address_space=2 --random=true' #
+[[pass]]                                                                                                  
+host = "val19"
+path = '~/projects/rocc_nvm/scripts/'
+cmd  = 'export MLX5_SINGLE_THREADED=1; ./nvm_rrtclient -addr="r740:6666" --threads=10 --coros=1 --id=0 --use_nic_idx=1 --payload=64 -use_read=false --window_sz=1 -address_space=2 --random=true' #

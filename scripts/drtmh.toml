@@ -1,0 +1,27 @@
+[[sync]]
+source = "wxd@val19:~/projects/rocc_nvm/scripts/noccocc"
+targets = ["wxd@val17:~","wxd@val20:~","wxd@val21:~", "wxd@val19:~"]
+
+[[sync]]
+source = "wxd@r740:~/projects/rocc_nvm/hosts.xml"
+targets = ["wxd@val17:~","wxd@val20:~","wxd@val21:~","wxd@r740:~","wxd@val19:~"]
+
+[[sync]]
+source = "wxd@r740:~/projects/rocc_nvm/config.xml"
+targets = ["wxd@val17:~","wxd@val20:~","wxd@val21:~","wxd@r740:~","wxd@val19:~"]
+
+[[pass]]
+host = "r740"
+path = '~/projects/rocc_nvm'
+cmd  = 'sudo ./scripts/noccocc --bench bank --txn-flags 1  --verbose --config config.xml --id 1 -t 10 -c 1 -r 1 -p 2'
+
+[[pass]]
+host = "val19"
+path = ''
+cmd  = './noccocc --bench bank --txn-flags 1  --verbose --config config.xml --id 0 -t 10 -c 12 -r 100 -p 2'
+
+
+
+
+
+
