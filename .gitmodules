@@ -1,0 +1,3 @@
+[submodule "ddio_tool/deps/gflags"]
+	path = ddio_tool/deps/gflags
+	url = https://github.com/gflags/gflags.git
