@@ -6,8 +6,8 @@ Efficient Remote Persistent Write using Remote Direct Memory Access and Non-vola
 
 Building benchmark executables is fairly easy, we use cmake script to automatically download and build dependent libraries.
 
-- git submodule update --init
-- cmake .; make;
+- `git submodule update --init`
+- `cmake .; make`;
 
 ## Run
 
