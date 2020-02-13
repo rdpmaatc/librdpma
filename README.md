@@ -4,11 +4,17 @@ Efficient Remote Persistent Write using Remote Direct Memory Access and Non-vola
 
 ## Build 
 
-TODO
+- git submodule update --init
+- cmake .; make;
 
 ## Run
 
-TODO
+For example, when running one-sided remote persistent write bench, and a server equipped with NVM is at "8.8.8.8".
+At server, run `sudo ./nvm_server --port=6666 -use_nvm=true --nvm_sz=10 --nvm_file=path_to_nvm`.
+Then at client, run `nvm_client -addr="r740:6666" --coros=8 --threads=20 --id=0 --use_nic_idx=1 --use_read=false --payload=64 --add_sync=true --address_space=2 --random=true`. 
+
+For more information about how to configure the runtime behavior of running server and client by passing command line parameters,
+use "./nvm_server --help" and "./nvm_client --help".
 
 ## Code structure
 
