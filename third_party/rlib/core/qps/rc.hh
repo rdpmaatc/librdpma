@@ -42,6 +42,7 @@ namespace qp {
   );
 */
 class RC : public Dummy {
+public:
   // default local MR used by this QP
   Option<RegAttr> local_mr;
   // default remote MR used by this QP
@@ -51,7 +52,7 @@ class RC : public Dummy {
 
   // pending requests monitor
   Progress progress;
-
+public:
   const QPConfig my_config;
 
   /* the only constructor
@@ -62,7 +63,8 @@ class RC : public Dummy {
      ...
      }
   */
-  RC(Arc<RNic> nic, const QPConfig &config) : Dummy(nic), my_config(config) {
+private:
+  RC(Arc<RNic> nic, const QPConfig &config,ibv_cq *recv_cq = nullptr) : Dummy(nic), my_config(config) {
     /*
       It takes 3 steps to create an RC QP during the initialization
       according to the RDMA programming mannal.
@@ -77,6 +79,11 @@ class RC : public Dummy {
       return;
     }
     this->cq = std::get<0>(res.desc);
+
+    // FIXME: we donot sanity check the the incoming recv_cq
+    // The choice is that the recv cq could be shared among other QPs
+    // shall we replace this with smart pointers ?
+    this->recv_cq = recv_cq;
 
     // 2 qp
     auto res_qp =
@@ -97,8 +104,9 @@ class RC : public Dummy {
 
 public:
   static Option<Arc<RC>> create(Arc<RNic> nic,
-                                const QPConfig &config = QPConfig()) {
-    auto res = Arc<RC>(new RC(nic, config));
+                                const QPConfig &config = QPConfig(),
+                                ibv_cq *recv_cq = nullptr) {
+    auto res = Arc<RC>(new RC(nic, config,recv_cq));
     if (res->valid()) {
       return Option<Arc<RC>>(std::move(res));
     }
@@ -192,6 +200,11 @@ public:
     return send_normal(desc, payload, local_mr.value(), remote_mr.value());
   }
 
+  u64 encode_my_wr(const u64 &wr, int forward_num) {
+    return (static_cast<u64>(wr) << Progress::num_progress_bits) |
+           static_cast<u64>(progress.forward(forward_num));
+  }
+
   Result<std::string> send_normal(const ReqDesc &desc,
                                   const ReqPayload &payload,
                                   const RegAttr &local_mr,
@@ -206,8 +219,7 @@ public:
 
     struct ibv_send_wr sr, *bad_sr;
 
-    sr.wr_id = (static_cast<u64>(desc.wr_id) << Progress::num_progress_bits) |
-               static_cast<u64>(progress.forward(1));
+    sr.wr_id = encode_my_wr(desc.wr_id, 1);
     sr.opcode = desc.op;
     sr.num_sge = 1;
     sr.next = nullptr;

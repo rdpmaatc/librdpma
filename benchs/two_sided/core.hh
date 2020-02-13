@@ -8,7 +8,7 @@
 #include "r2/src/common.hh"
 #include "r2/src/mem_block.hh"
 
-#include "../../nvm_region.hh"
+#include "src/nvm_region.hh"
 
 #include "./proto.hh"
 

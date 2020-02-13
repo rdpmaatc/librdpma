@@ -1,7 +1,8 @@
 #include <gflags/gflags.h>
 
-#include "../../huge_region.hh"
-#include "../../nvm_region.hh"
+#include "src/huge_region.hh"
+#include "src/nvm_region.hh"
+
 #include "rlib/core/lib.hh"
 
 #include "../thread.hh"

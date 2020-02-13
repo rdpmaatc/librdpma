@@ -7,6 +7,8 @@
 #include "../utils/mod.hh"
 #include "../utils/abs_factory.hh"
 
+#include "./recv_helper.hh"
+
 namespace rdmaio {
 
 namespace qp {
@@ -119,15 +121,15 @@ public:
       // poll one comp
       res = poll_send_comp(1);
     } while (res.first == 0 && // poll result is 0
-             t.passed_msec() < timeout);
+             t.passed_msec() <= timeout);
     if(res.first == 0)
       return Timeout(res.second);
-    if(res.first < 0 || res.second.status != IBV_WC_SUCCESS)
+    if(unlikely(res.first < 0 || res.second.status != IBV_WC_SUCCESS))
       return Err(res.second);
     return Ok(res.second);
   }
 
-  // below handy helper functions for common QP operations
+  // below is handy helper functions for common QP operations
   /**
    * return whether qp is in {INIT,READ_TO_RECV,READY_TO_SEND} states
    */
@@ -142,6 +144,34 @@ public:
     return Ok(attr.qp_state);
   }
 
+  /*!
+  Post *num* recv entries to the QP, start at entries.header
+
+  \ret
+  - Err: errono
+  - Ok: -
+ */
+  template <usize entries>
+  Result<int> post_recvs(RecvEntries<entries> &r, int num) {
+
+    auto tail = r.header + num - 1;
+    if (tail >= entries)
+      tail -= entries;
+    auto temp = std::exchange((r.rs + tail)->next, nullptr);
+
+    // really post the recvs
+    struct ibv_recv_wr *bad_rr;
+    auto rc = ibv_post_recv(this->qp, r.header_ptr(), &bad_rr);
+
+    if (rc != 0)
+      return Err(errno);
+
+    // re-set the header, tailer
+    r.wr_ptr(tail)->next = temp;
+    r.header = (tail + 1) % entries;
+
+    return Ok(0);
+  }
 };
 
 } // namespace qp

@@ -11,13 +11,14 @@
 #include "two_sided/core.hh"
 #include "two_sided/r740.hh"
 
-#include "../nvm_region.hh"
-#include "../huge_region.hh"
+#include "src/nvm_region.hh"
+#include "src/huge_region.hh"
+
+//#include "src/nt_memcpy.hh"
 
 #include "./statucs.hh"
 #include "./thread.hh"
 
-#include "./nt_memcpy.hh"
 
 DEFINE_string(nvm_file, "/dev/dax1.6", "Abstracted NVM device");
 DEFINE_uint64(nvm_sz, 10, "Mapped sz (in GB), should be larger than 2MB");

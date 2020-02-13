@@ -13,7 +13,7 @@
 
 #include "../statucs.hh"
 
-#include "../../huge_region.hh"
+#include "./src/huge_region.hh"
 
 DEFINE_string(addr, "localhost:8888", "Server address to connect to.");
 DEFINE_int64(use_nic_idx, 0, "Which NIC to create QP");

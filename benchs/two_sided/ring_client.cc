@@ -6,7 +6,8 @@
 
 #include "../gen_addr.hh"
 
-#include "../../huge_region.hh"
+#include "src/huge_region.hh"
+
 #include "../latency.hh"
 #include "../statucs.hh"
 #include "../thread.hh"

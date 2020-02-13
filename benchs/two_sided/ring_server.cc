@@ -6,8 +6,8 @@
 
 #include "./r740.hh"
 
-#include "../../huge_region.hh"
-#include "../../nvm_region.hh"
+#include "src/huge_region.hh"
+#include "src/nvm_region.hh"
 
 #include "../thread.hh"
 #include "./constants.hh"
