@@ -1,6 +1,6 @@
 # librdpma
 
-Efficient Remote Persistent Write using Remote Direct Memory Access and Non-volatile Memory.
+Efficient Remote Persistent Write using Remote Direct Memory Access (RDMA) and Non-volatile Memory (NVM).
 
 ## Build 
 
@@ -17,6 +17,8 @@ Then at client, run `nvm_client -addr="r740:6666" --coros=8 --threads=20 --id=0 
 
 For more information about how to configure the runtime behavior of running server and client by passing command line parameters,
 use `./nvm_server --help` and `./nvm_client --help`.
+
+Evaluation scripts are listed in `scripts`.
 
 ## Code structure
 
